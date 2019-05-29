@@ -15,10 +15,11 @@ blue = 1
 
 cell_list = []
 cell_table = []
-cell_color = []
+
 pick_cell = []
 pick_color = [(1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 1), (0, 0, 0)]
-
+pick_color_x = 0
+pick_color_y = 0
 
 FRAMERATE = 1
 
@@ -49,13 +50,18 @@ class table(cell):
 		pass
 
 def on_click(mx, my):
-	global cx, cy, pick_cell
+	global cx, cy, pick_cell, pick_color_x, pick_color_y
 	print("Mouse click! " + str(mx) + " " + str(my))
-	pick_cell.append((mx, my))
+	if mx >= 360 and mx < 400 and my >= 0 and my < 200:
+		pick_color_x = mx
+		pick_color_y = my
+	else:
+		pick_cell.append((mx, my))
+	
 	print(pick_cell)
 
 def main():
-	global x, y, red, green, blue, pick_cell, pick_color, PIXEL_PER_CELL, NUMBER_CELL_WIDTH	
+	global x, y, red, green, blue, pick_cell, pick_color, pick_color_x, pick_color_y,  PIXEL_PER_CELL, NUMBER_CELL_WIDTH	
 	
 	cell_list = []
 	cell_table = []
@@ -81,16 +87,6 @@ def main():
 				y = 0
 	
 	cell_list += cell_table
-	
-	# fill cell
-	for c in range(len(cell_table)):
-		for p in range(len(pick_cell)):
-			if pick_cell[p][0] >= cell_table[c].x and pick_cell[p][0] < cell_table[c].x + 40 \
-			and pick_cell[p][1] >= cell_table[c].y and pick_cell[p][1] < cell_table[c].y + 40:
-				cell_table[c].r = red
-				cell_table[c].g = green
-				cell_table[c].b = blue
-		cell_table[c].draw()
 
 	# create color to fill cell
 	y_color = 0
@@ -105,13 +101,27 @@ def main():
 
 	cell_list += cell_color
 
+	print(pick_color_x, pick_color_y)
+
 	# pick color to fill cell
 	for c in range(len(cell_color)):
+		if pick_color_x >= cell_color[c].x and pick_color_x < cell_color[c].x + 40 \
+		and pick_color_y >= cell_color[c].y and pick_color_y < cell_color[c].y + 40:
+			red = cell_color[c].r
+			green = cell_color[c].g
+			blue = cell_color[c].b
+			
+	print(red, green, blue)
+
+	# fill cell
+	for c in range(len(cell_table)):
 		for p in range(len(pick_cell)):
-			if pick_cell[p][0] >= cell_color[c].x and pick_cell[p][0] < cell_color[c].x + 40 \
-			and pick_cell[p][1] >= cell_color[c].y and pick_cell[p][1] < cell_color[c].y + 40:
-				red = cell_color[c].r
-				green = cell_color[c].g
-				blue = cell_color[c].b
+			if pick_cell[p][0] >= cell_table[c].x and pick_cell[p][0] < cell_table[c].x + 40 \
+			and pick_cell[p][1] >= cell_table[c].y and pick_cell[p][1] < cell_table[c].y + 40:
+				cell_table[c].r = red
+				cell_table[c].g = green
+				cell_table[c].b = blue
+		cell_table[c].draw()
+
 	
 start_graphics(main, mouse_press=on_click)
