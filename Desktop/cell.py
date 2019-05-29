@@ -56,7 +56,7 @@ def on_click(mx, my):
 		pick_color_x = mx
 		pick_color_y = my
 	else:
-		pick_cell.append((mx, my))
+		pick_cell.append((mx, my, red, green, blue))
 	
 	print(pick_cell)
 
@@ -101,8 +101,6 @@ def main():
 
 	cell_list += cell_color
 
-	print(pick_color_x, pick_color_y)
-
 	# pick color to fill cell
 	for c in range(len(cell_color)):
 		if pick_color_x >= cell_color[c].x and pick_color_x < cell_color[c].x + 40 \
@@ -110,17 +108,15 @@ def main():
 			red = cell_color[c].r
 			green = cell_color[c].g
 			blue = cell_color[c].b
-			
-	print(red, green, blue)
 
 	# fill cell
 	for c in range(len(cell_table)):
 		for p in range(len(pick_cell)):
 			if pick_cell[p][0] >= cell_table[c].x and pick_cell[p][0] < cell_table[c].x + 40 \
 			and pick_cell[p][1] >= cell_table[c].y and pick_cell[p][1] < cell_table[c].y + 40:
-				cell_table[c].r = red
-				cell_table[c].g = green
-				cell_table[c].b = blue
+				cell_table[c].r = pick_cell[p][2]
+				cell_table[c].g = pick_cell[p][3]
+				cell_table[c].b = pick_cell[p][4]
 		cell_table[c].draw()
 
 	
